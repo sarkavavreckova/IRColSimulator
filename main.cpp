@@ -33,18 +33,19 @@ int main()
 {
     // Example IR Colony instance:
     IRColony ircolony;
-    IRSet hSet(IRObject("lbVersion",1),IRObject("lbState",0));
-    Agent hAgent("LightBulb");
+    ircolony.env.insert(IRObject("lbVersion",1));
+    
     IRProgram hProg;
     
     // Smart Light Bulb
-    hAgent.env.insert(IRObject("lbIntensity",2));
+    Agent hAgent("LightBulb");
+    hAgent.env.insert(IRObject("lbIntensity",8));
+    hAgent.env.insert(IRObject("lbState",0));
     ircolony.addAgent(hAgent);
     
     // Control Panel
     hAgent.label = "ControlPanel";
     hAgent.env.clear();
-    hAgent.env.insert(IRObject("cVersion",1));
     hAgent.env.insert(IRObject("cLightState",0));
     hAgent.env.insert(IRObject("cWinState",0));
     hAgent.env.insert(IRObject("cWinManual",0));
@@ -55,6 +56,7 @@ int main()
     hProg.setLabel("cWindowState");
     hProg.addRule(ProgRule(MULTICAST, IRObject("cWinState"), IRObject("wState")));
     hProg.addReactant(Effector("cWinManual",EQUAL,1));
+    hAgent.programs.insert(hProg);
     hProg.clear();
     hProg.setLabel("cWindowManual");
     hProg.addRule(ProgRule(MULTICAST, IRObject("cWinManual"), IRObject("wManual")));
@@ -64,7 +66,6 @@ int main()
     // Window Control
     hAgent.label = "WindowControl";
     hAgent.env.clear();
-    hAgent.env.insert(IRObject("wVersion",1));
     hAgent.env.insert(IRObject("wState",0));
     hAgent.env.insert(IRObject("wManual",0));
     hAgent.programs.clear();
@@ -83,17 +84,17 @@ int main()
     hProg.clear();
     hProg.setLabel("wClose");
     hProg.addRule(ProgRule(EVOLUTION,IRObject("wState",1), IRObject("wState",0)));
-    hProg.addReactant(Effector("temp",LESS,22));
-    hProg.addReactant(Effector("sCO2State",LESS,1200));
-    hProg.addInhibitor(Effector("wManual",EQUAL,0));
+    hProg.addInhibitor(Effector("wManual",EQUAL,1));
+    hProg.addInhibitor(Effector("temp",GREATER,22));
+    hProg.addInhibitor(Effector("sCO2State",GREATER,1200));
     hAgent.programs.insert(hProg);
     ircolony.addAgent(hAgent);
     
     // Thermometer
     hAgent.label = "Thermometer";
     hAgent.env.clear();
-    hAgent.env.insert(IRObject("tVersion",1));
     hAgent.env.insert(IRObject("temp",24));
+    hAgent.programs.clear();
     hProg.clear();
     hProg.setLabel("tempOut");
     hProg.addRule(ProgRule(MULTICAST, IRObject("temp"), IRObject("temp")));

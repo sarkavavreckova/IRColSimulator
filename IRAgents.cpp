@@ -90,8 +90,16 @@ bool ProgRule::applicable(const IRSet& agentEnv, const IRSet& IREnv) const {
     case EVOLUTION:
     case DELETION:
     case MULTICAST:
-    case BACKUP:
-        return agentEnv.containsName(inObject.name);
+    case BACKUP: {
+        auto itr=agentEnv.findName(inObject.name);
+        if (itr == agentEnv.end()) {
+            return false;
+        }
+        if (inObject.hasValue) {
+            return (inObject.value == itr->second.value);
+        }
+        return true;
+    }    
     case RESTORATION:
         return IREnv.containsName(outObject.name);
     default: 
