@@ -16,6 +16,7 @@ After launching the simulator, a menu appears where you can select the desired a
 The project is currently in its early stages and implements only the basic features of the IR Colonies model. The following features will be added gradually:
 * input, i.e. the structure of the IoT network, in JSON format (for demonstration purposes, several agents have been hard-coded into the code),
 * programming rules intended for updating agents' programs,
+* agents execute only single applicable program in one step, this behavior will change, 
 * real parallelism (threads for all agents). 
 
 Detailed information about IR Colonies can be found on the website https://ceur-ws.org/Vol-4092/paper21.pdf
